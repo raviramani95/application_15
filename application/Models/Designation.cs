@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace application.Entities
+namespace application.Models
 {
     public class Designation
     {
-        [Key]
         public int DesignationId { get; set; }
         public string DesignationName { get; set; }
     }

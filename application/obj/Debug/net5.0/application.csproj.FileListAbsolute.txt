@@ -11,7 +11,6 @@ C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Micros
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\application.csproj.AssemblyReference.cache
 C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\application.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\application.AssemblyInfoInputs.cache
 C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\application.AssemblyInfo.cs
@@ -120,3 +119,13 @@ C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\runtim
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\application.csproj.AssemblyReference.cache
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\application.StaticWebAssets.xml
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.AspNetCore.Identity.UI.Views.V4.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\staticwebassets\application.StaticWebAssets.xml

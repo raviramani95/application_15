@@ -5,22 +5,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace application.Entities
+namespace application.Models
 {
     public class Employee
     {
         [Key]
         public int EmployeeId { get; set; }
-
-        [Required]
         public string EmployeeFirstName { get; set; }
-
-        [Required]
         public string EmployeeLastName { get; set; }
 
-        public Department Department { get; set; }
+        [ForeignKey("Gender")]
+        public int GenderId { get; set; }
         public Gender Gender { get; set; }
-        public Designation Designation { get; set; }
 
+        [ForeignKey("DepartmentId")]
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
+
+        [ForeignKey("DesignationId")]
+        public int DesignationId { get; set; }
+        public Designation Designation { get; set; }
     }
 }
