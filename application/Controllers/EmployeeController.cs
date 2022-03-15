@@ -48,7 +48,7 @@ namespace application.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Employee>> Edit(Employee employee)
+        public async Task<ActionResult<Employee>> AddEmployee(Employee employee)
         {
             _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
