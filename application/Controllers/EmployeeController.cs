@@ -1,5 +1,8 @@
 ﻿using application.Data;
+using application.DTOs;
 using application.Models;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,36 +18,51 @@ namespace application.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeContex _context;
+        private readonly IMapper _mapper;
 
-        public EmployeeController(EmployeeContex context)
+        public EmployeeController(EmployeeContex context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployees()
         {
-            return await _context.Employee
+            var employees = await _context.Employee
+                /*.ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)*/
+                .ToListAsync();
+
+            
+            var emps = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+
+            return Ok(emps);
+           /* return await _context.Employee
                 .AsNoTracking()
                 .Include(i => i.Gender)
                 .Include(i => i.Department)
                 .Include(i => i.Designation)
-                .ToListAsync();
+                .ToListAsync();*/
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(int id)
+        public async Task<ActionResult<EmployeeDto>> GetEmployee(int id)
         {
             var employee = await _context.Employee
-                .AsNoTracking()
+                /*.AsNoTracking()
                 .Include(i => i.Gender)
                 .Include(i => i.Department)
-                .Include(i => i.Designation)
+                .Include(i => i.Designation)*/
+                .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(w => w.EmployeeId == id);
 
             if (employee == null) return NotFound();
 
-            return employee;
+            /*employee.Gender = _context.Gender.SingleOrDefaultAsync(w => w.GenderId == int.Parse(employee.Gender));*/
+
+            /*var emp = _mapper.Map<IEnumerable<EmployeeDto>>(employee);*/
+
+            return Ok(employee);
         }
 
         [HttpPost]

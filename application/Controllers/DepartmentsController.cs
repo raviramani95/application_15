@@ -1,5 +1,8 @@
 ﻿using application.Data;
+using application.DTOs;
 using application.Models;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,22 +18,27 @@ namespace application.Controllers
     public class DepartmentsController : ControllerBase
     {
         private readonly EmployeeContex _context;
+        private readonly IMapper _mapper;
 
-        public DepartmentsController(EmployeeContex context)
+        public DepartmentsController(EmployeeContex context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
+        public async Task<ActionResult<IEnumerable<DepartmentDto>>> GetDepartments()
         {
-            return await _context.Department.ToListAsync();
+            var departments =  await _context.Department.ToListAsync();
+            var ds = _mapper.Map<IEnumerable<DepartmentDto>>(departments);
+            return Ok(ds);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Department>> GetDepartment(int id)
+        public async Task<ActionResult<DepartmentDto>> GetDepartment(int id)
         {
             var department = await _context.Department
+                .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(w => w.DepartmentId == id);
 
             if (department == null) return NotFound();
