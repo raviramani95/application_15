@@ -2,7 +2,7 @@
 
 namespace application.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -51,11 +51,11 @@ namespace application.Migrations
                 {
                     EmployeeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    EmployeeFirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmployeeLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
-                    GenderId = table.Column<int>(type: "int", nullable: true),
-                    DesignationId = table.Column<int>(type: "int", nullable: true)
+                    EmployeeFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmployeeLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GenderId = table.Column<int>(type: "int", nullable: false),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    DesignationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,19 +65,55 @@ namespace application.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Department",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Employee_Designation_DesignationId",
                         column: x => x.DesignationId,
                         principalTable: "Designation",
                         principalColumn: "DesignationId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Employee_Gender_GenderId",
                         column: x => x.GenderId,
                         principalTable: "Gender",
                         principalColumn: "GenderId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Department",
+                columns: new[] { "DepartmentId", "DepartmentName" },
+                values: new object[,]
+                {
+                    { 1, "HR" },
+                    { 2, "Administrator" },
+                    { 3, "Account" },
+                    { 4, "Research & Development" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Designation",
+                columns: new[] { "DesignationId", "DesignationName" },
+                values: new object[,]
+                {
+                    { 1, "HPEL" },
+                    { 2, "Associate Developer" },
+                    { 3, "Software Developer " },
+                    { 4, "Senior Developer" },
+                    { 5, "Tech Lead" },
+                    { 6, "Delivery Manager" },
+                    { 7, "HR" },
+                    { 8, "Technical Research" },
+                    { 9, "Administrator" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Gender",
+                columns: new[] { "GenderId", "GenderName" },
+                values: new object[,]
+                {
+                    { 1, "Male" },
+                    { 2, "Female" }
                 });
 
             migrationBuilder.CreateIndex(

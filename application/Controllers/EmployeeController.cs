@@ -30,19 +30,10 @@ namespace application.Controllers
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployees()
         {
             var employees = await _context.Employee
-                /*.ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)*/
                 .ToListAsync();
-
-            
             var emps = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
 
             return Ok(emps);
-           /* return await _context.Employee
-                .AsNoTracking()
-                .Include(i => i.Gender)
-                .Include(i => i.Department)
-                .Include(i => i.Designation)
-                .ToListAsync();*/
         }
 
         [HttpGet("{id}")]
@@ -81,13 +72,13 @@ namespace application.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Employee>> AddEmployee(Employee employee)
+        public async Task<ActionResult> AddEmployee(Employee employee)
         {
             _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
 
-
-            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+            return Ok("Employee Successfully added..");
+            /*return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);*/
         }
 
         [HttpPut("{id}")]
@@ -96,6 +87,10 @@ namespace application.Controllers
             if(id != employee.EmployeeId)
             {
                 return BadRequest();
+            }
+            if (!EmployeeExists(id))
+            {
+                return BadRequest("Employee Alredy exists");
             }
 
             _context.Entry(employee).State = EntityState.Modified;
@@ -115,19 +110,23 @@ namespace application.Controllers
                     throw;
                 }
             }
-            return NoContent();
+            return Ok("Employee Successfully Update..");
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmployee(int id)
         {
+            if (!EmployeeExists(id))
+            {
+                return BadRequest("Employee Not Found");
+            }
             var employee = await _context.Employee.FindAsync(id);
             if (employee == null) return NotFound("Employee Not found");
 
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("Employee Successfully Deleteded..");
         }
         private bool EmployeeExists(int id)
         {

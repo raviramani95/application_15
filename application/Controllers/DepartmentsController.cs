@@ -47,13 +47,13 @@ namespace application.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Department>> AddDepartment(Department department)
+        public async Task<ActionResult> AddDepartment(Department department)
         {
             _context.Department.Add(department);
             await _context.SaveChangesAsync();
 
-
-            return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);
+            return Ok("Department Successfully added..");
+            /*return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);*/
         }
 
         [HttpPut("{id}")]
@@ -63,6 +63,7 @@ namespace application.Controllers
             {
                 return BadRequest();
             }
+            if (!DepartmentExists(id)) return BadRequest("Department not found");
 
             _context.Entry(department).State = EntityState.Modified;
 
@@ -72,7 +73,7 @@ namespace application.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployeeExists(id))
+                if (!DepartmentExists(id))
                 {
                     return NotFound();
                 }
@@ -95,7 +96,7 @@ namespace application.Controllers
 
             return Ok("Successfully deleted");
         }
-        private bool EmployeeExists(int id)
+        private bool DepartmentExists(int id)
         {
             return _context.Department.Any(e => e.DepartmentId == id);
         }

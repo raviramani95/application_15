@@ -9,8 +9,8 @@ using application.Data;
 namespace application.Migrations
 {
     [DbContext(typeof(EmployeeContex))]
-    [Migration("20220315105402_seed_data")]
-    partial class seed_data
+    [Migration("20220316055054_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,7 +20,7 @@ namespace application.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("application.Entities.Department", b =>
+            modelBuilder.Entity("application.Models.Department", b =>
                 {
                     b.Property<int>("DepartmentId")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace application.Migrations
                         });
                 });
 
-            modelBuilder.Entity("application.Entities.Designation", b =>
+            modelBuilder.Entity("application.Models.Designation", b =>
                 {
                     b.Property<int>("DesignationId")
                         .ValueGeneratedOnAdd()
@@ -119,7 +119,7 @@ namespace application.Migrations
                         });
                 });
 
-            modelBuilder.Entity("application.Entities.Employee", b =>
+            modelBuilder.Entity("application.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
@@ -133,11 +133,9 @@ namespace application.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EmployeeFirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmployeeLastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GenderId")
@@ -154,7 +152,7 @@ namespace application.Migrations
                     b.ToTable("Employee");
                 });
 
-            modelBuilder.Entity("application.Entities.Gender", b =>
+            modelBuilder.Entity("application.Models.Gender", b =>
                 {
                     b.Property<int>("GenderId")
                         .ValueGeneratedOnAdd()
@@ -181,22 +179,22 @@ namespace application.Migrations
                         });
                 });
 
-            modelBuilder.Entity("application.Entities.Employee", b =>
+            modelBuilder.Entity("application.Models.Employee", b =>
                 {
-                    b.HasOne("application.Entities.Department", "Department")
-                        .WithMany()
+                    b.HasOne("application.Models.Department", "Department")
+                        .WithMany("DEmployees")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("application.Entities.Designation", "Designation")
+                    b.HasOne("application.Models.Designation", "Designation")
                         .WithMany()
                         .HasForeignKey("DesignationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("application.Entities.Gender", "Gender")
-                        .WithMany()
+                    b.HasOne("application.Models.Gender", "Gender")
+                        .WithMany("Employees")
                         .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -206,6 +204,16 @@ namespace application.Migrations
                     b.Navigation("Designation");
 
                     b.Navigation("Gender");
+                });
+
+            modelBuilder.Entity("application.Models.Department", b =>
+                {
+                    b.Navigation("DEmployees");
+                });
+
+            modelBuilder.Entity("application.Models.Gender", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

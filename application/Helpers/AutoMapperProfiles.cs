@@ -14,7 +14,6 @@ namespace application.Helpers
         {
             CreateMap<Employee, EmployeeDto>()
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.GenderId))
-/*                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.GenderId == 1 ? "Male" : "Female"))*/
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.DepartmentId))
                 .ForMember(dest => dest.Designation, opt => opt.MapFrom(src => src.DesignationId));
             CreateMap<Gender, GenderDto>();
