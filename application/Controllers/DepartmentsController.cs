@@ -29,9 +29,11 @@ namespace application.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDto>>> GetDepartments()
         {
-            var departments =  await _context.Department.ToListAsync();
-            var ds = _mapper.Map<IEnumerable<DepartmentDto>>(departments);
-            return Ok(ds);
+            var departments =  await _context.Department
+                .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+            /*var ds = _mapper.Map<IEnumerable<DepartmentDto>>(departments);*/
+            return Ok(departments);
         }
 
         [HttpGet("{id}")]
@@ -49,6 +51,8 @@ namespace application.Controllers
         [HttpPost]
         public async Task<ActionResult> AddDepartment(Department department)
         {
+           /* var departmentName = department.DepartmentName;*/
+           
             _context.Department.Add(department);
             await _context.SaveChangesAsync();
 

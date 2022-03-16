@@ -43,11 +43,13 @@ namespace application
             services.AddDbContextPool<EmployeeContex>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ConnectionString"))
             ) ;
-
+/*
             services.AddControllers().AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);*/
 
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+
+            services.AddCors();
 
         }
 
@@ -64,6 +66,8 @@ namespace application
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:4200"));
 
             app.UseAuthorization();
 

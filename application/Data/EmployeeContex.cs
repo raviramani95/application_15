@@ -24,7 +24,7 @@ namespace application.Data
 
             modelBuilder.Entity<Employee>(entity =>
             {
-                entity.ToTable("Employee"); 
+                entity.ToTable("Employee");
 
                 entity.HasOne(d => d.Gender)
                 .WithMany(d => d.Employees);

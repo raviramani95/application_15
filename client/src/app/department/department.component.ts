@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Department } from '../_models/department.model';
+import { DepartmentService } from '../_services/department.service';
 
 @Component({
   selector: 'app-department',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DepartmentComponent implements OnInit {
 
-  constructor() { }
+  departments: Department[];
+  constructor(private departmentService: DepartmentService) { }
 
   ngOnInit(): void {
+    // this.departmentService.getDepartments().subscribe(
+    //   dept => {
+    //     console.log(dept);
+    //   }
+    // );
   }
+
 
 }

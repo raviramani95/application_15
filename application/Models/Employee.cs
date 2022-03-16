@@ -14,16 +14,16 @@ namespace application.Models
         public string EmployeeFirstName { get; set; }
         public string EmployeeLastName { get; set; }
 
-        [ForeignKey("Gender")]
+        [ForeignKey("GenderId")]
         public int GenderId { get; set; }
-        public Gender Gender { get; set; }
+        public virtual Gender Gender { get; set; }
 
         [ForeignKey("DepartmentId")]
         public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public virtual Department Department { get; set; }
 
         [ForeignKey("DesignationId")]
         public int DesignationId { get; set; }
-        public Designation Designation { get; set; }
+        public virtual Designation Designation { get; set; }
     }
 }

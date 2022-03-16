@@ -19,7 +19,7 @@ namespace application.DTOs
         [ForeignKey("Department")]*/
         public string Department { get; set; }
 
-        [ForeignKey("Designation")]
+       /* [ForeignKey("Designation")]*/
         public string Designation { get; set; }
     }
 }

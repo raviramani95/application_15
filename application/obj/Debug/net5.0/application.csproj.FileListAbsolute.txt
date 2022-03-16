@@ -134,4 +134,3 @@ C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Micros
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.Extensions.Options.dll
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\Microsoft.Extensions.Primitives.dll
 C:\Users\ravi.ramani\Desktop\app\application\application\bin\Debug\net5.0\System.Runtime.CompilerServices.Unsafe.dll
-C:\Users\ravi.ramani\Desktop\app\application\application\obj\Debug\net5.0\application.csproj.AssemblyReference.cache
