@@ -14,12 +14,12 @@ namespace application.DTOs
         public string EmployeeLastName { get; set; }
 /*
         [ForeignKey("Gender")]*/
-        public int Gender { get; set; }
+        public string Gender { get; set; }
 /*
         [ForeignKey("Department")]*/
-        public int Department { get; set; }
+        public string Department { get; set; }
 
         [ForeignKey("Designation")]
-        public int Designation { get; set; }
+        public string Designation { get; set; }
     }
 }

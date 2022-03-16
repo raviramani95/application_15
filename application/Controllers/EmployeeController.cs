@@ -48,15 +48,30 @@ namespace application.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDto>> GetEmployee(int id)
         {
-            var employee = await _context.Employee
-                /*.AsNoTracking()
+            EmployeeDto employee = await _context.Employee
                 .Include(i => i.Gender)
                 .Include(i => i.Department)
-                .Include(i => i.Designation)*/
+                .Include(i => i.Designation)
+                .Select(
+                   b => new EmployeeDto()
+                   {
+                       EmployeeId = b.EmployeeId,
+                       EmployeeFirstName = b.EmployeeFirstName,
+                       EmployeeLastName = b.EmployeeLastName,
+                       Gender = b.Gender.GenderName,
+                       Department = b.Department.DepartmentName,
+                       Designation = b.Designation.DesignationName
+                   }).SingleOrDefaultAsync(c => c.EmployeeId == id);
+
+            /*var employee = await _context.Employee
+                *//*.AsNoTracking()
+                .Include(i => i.Gender)
+                .Include(i => i.Department)
+                .Include(i => i.Designation)*//*
                 .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(w => w.EmployeeId == id);
 
-            if (employee == null) return NotFound();
+            if (employee == null) return NotFound();*/
 
             /*employee.Gender = _context.Gender.SingleOrDefaultAsync(w => w.GenderId == int.Parse(employee.Gender));*/
 
