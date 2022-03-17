@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DepartmentService } from '../_services/department.service';
 import { map, Observable } from 'rxjs';
 import { Department } from '../_models/department.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-department',
@@ -10,7 +11,11 @@ import { Department } from '../_models/department.model';
 })
 export class DepartmentComponent implements OnInit {
 
-  departments = [];
+  departments: Department[];
+  department: Department;
+  action: string = "Add";
+
+
   addMode = false;
   ModalTitle: string;
   ActivateAddEditDepComp = false;
@@ -19,8 +24,19 @@ export class DepartmentComponent implements OnInit {
   newDepartmentName = "";
 
   updateDepartmentName = "";
+  updateDepartmentId = "";
+  deptForm: FormGroup;
 
-  constructor(private deptService: DepartmentService) { }
+  listData: any;
+
+  constructor(private deptService: DepartmentService, private fb:FormBuilder) { 
+
+    this.listData = [];
+    this.deptForm = this.fb.group({
+      dipartmentId : ['', Validators.required],
+      dipartmentName : ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     this.getDepartments();
@@ -33,7 +49,16 @@ export class DepartmentComponent implements OnInit {
     })
   }
 
+  getDepartment(id: any){
+    console.log(id);
+      this.deptService.getDepartmentById(id).subscribe(res => this.department = res);
+      console.log(this.department);
+  }
+
   onAddDepartment(){
+    this.listData.push(this.deptForm.value);
+    this.deptForm.reset();
+    console.log(this.listData);
     this.addMode =true;
     let department = { departmentName: this.newDepartmentName}
     this.deptService.addDepartment(department).subscribe(res => {
@@ -55,6 +80,9 @@ export class DepartmentComponent implements OnInit {
   }
 
   onUpdateDepartment(event: Event){
+    this.listData.push(this.deptForm.value);
+    this.deptForm.reset();
+    console.log(this.listData);
     var dept = {
       departmentId: 1,
       departmentName: this.updateDepartmentName
@@ -78,31 +106,34 @@ export class DepartmentComponent implements OnInit {
       }, 4000);
     });
   }
+
   updateDepartment(id: number){
     this.addMode =false;
     this.ModalTitle = "Update Department";  
   }
 
   
-  onDelete(event: any){
-    this.deptService.deleteDepartment(event.departmentId).subscribe(res => {
-      var closeModalBtn = document.getElementById('add-edit-modal-close');
-      if(closeModalBtn) {
-        closeModalBtn.click();
-      }
+  onDelete(data: any){
+    console.log(data.departmentId);
+    console.log(this.department);
+    // this.deptService.deleteDepartment(event.departmentId).subscribe(res => {
+    //   var closeModalBtn = document.getElementById('add-edit-modal-close');
+    //   if(closeModalBtn) {
+    //     closeModalBtn.click();
+    //   }
 
-      var showDeleteSuccess = document.getElementById('delete-success-alert');
-      if(showDeleteSuccess) {
-        showDeleteSuccess.style.display = "block";
-      }
-      setTimeout(function() {
-        if(showDeleteSuccess) {
-          showDeleteSuccess.style.display = "none"
-        }
-      }, 4000);
+    //   var showDeleteSuccess = document.getElementById('delete-success-alert');
+    //   if(showDeleteSuccess) {
+    //     showDeleteSuccess.style.display = "block";
+    //   }
+    //   setTimeout(function() {
+    //     if(showDeleteSuccess) {
+    //       showDeleteSuccess.style.display = "none"
+    //     }
+    //   }, 4000);
 
-      this.departmentLists$ = this.deptService.getDepartments();
-    });
+    //   this.departmentLists$ = this.deptService.getDepartments();
+    // });
   }
 
 

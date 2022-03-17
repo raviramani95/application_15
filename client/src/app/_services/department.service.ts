@@ -8,12 +8,14 @@ import { Department } from '../_models/department.model';
   providedIn: 'root'
 })
 export class DepartmentService {
+
   apiUrl = environment.apiUrl;
   existsDepartment = ["HR", "Administrator", "Account", "Research & Development"];
+  departments: Department[];
 
   constructor(private http: HttpClient) { }
 
-  getDepartments():Observable<Department[]>{
+  getDepartments(): Observable<Department[]>{
     return this.http.get<Department[]>(this.apiUrl + 'departments');
   }
   
@@ -34,10 +36,9 @@ export class DepartmentService {
     return this.http.put<Department>(this.apiUrl + 'departments/' + id, department, httpOptions);  
   }
 
-  deleteDepartment(deptId: string): Observable<number> { 
-    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
-    return this.http.delete<number>(this.apiUrl + 'departments/' +deptId,  
-      httpOptions);  
+  deleteDepartment(deptId: any): Observable<Department> { 
+    debugger;
+    return this.http.delete<Department>(this.apiUrl + 'departments/' +deptId); 
   }  
   
 

@@ -19,33 +19,39 @@
             ></button>
         </div>
         <div class="modal-body">
-            <form autocomplete="off">
-                <div class="form-froup form-row">
-                    <div *ngIf="addMode">
-                        <label class="col-sm-4 col-form-label ml">Department Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" 
-                            [(ngModel)]="newDepartmentName" 
-                            placeholder="Enter Department Name" 
-                            name="newDepartment" >
+                <form autocomplete="off" [formGroup]="deptForm">
+                        <div *ngIf="addMode" claa="from-group">
+                            <label class="col-sm-4 col-form-label ml">Department Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" 
+                                [(ngModel)]="newDepartmentName" 
+                                placeholder="Enter Department Name" 
+                                name="newDepartment" formControlName="dipartmentName" >
+                        </div>
+                        </div>
+                        <div angif="!addMode" claa="from-group">
+                            <!-- <label class="col-sm-4 col-form-label ml">Department Id</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" 
+                                    [(ngModel)]="updateDepartmentId" 
+                                    name="updateDepartment" formControlName="dipartmentId">
+                            </div> -->
+                            <label class="col-sm-4 col-form-label ml">Department Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" 
+                                [(ngModel)]="updateDepartmentName" 
+                                name="updateDepartment" formControlName="dipartmentName">
+                        </div>
+                        </div>
+                   
+                    
+                    <div class="modal-footer">
+                        <button (click)="onAddDepartment()" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
+                        <button (click)="onUpdateDepartment()" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
+                        <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
                     </div>
-                    </div>
-                    <div angif="!addMode">
-                        <label class="col-sm-4 col-form-label ml">Department Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" 
-                            [(ngModel)]="updateDepartmentName" 
-                            name="updateDepartment">
-                    </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer">
-                    <button (click)="onAddDepartment()" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
-                    <button (click)="onUpdateDepartment()" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
-                    <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
-                </div>
-            </form>
+                </form>
+            
         </div>
         
       </div>
@@ -64,28 +70,28 @@
         </thead>
         <tbody>
             <tr *ngFor="let dept of departments">
-                <td>{{dept.departmentId}}</td>
+                <th shope="row">{{dept.departmentId}}</th>
                 <td>{{dept.departmentName}}</td>
 
                 <ng-container >
                     <td>
-                        <button class="btn btn-primary me-2 mb-1" 
-                            (click)="updateDepartment($event)" type="submit" 
-                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path
-                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path fill-rule="evenodd"
-                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                </svg>
-                        </button>
-                    </td>
+                    <button class="btn btn-primary me-2 mb-1" 
+                        (click)="updateDepartment($event)" type="submit" 
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg>
+                    </button>
+                </td>
                 </ng-container>
                 
                 <td>
                     <button class="btn btn-danger me-2 mb-1" 
-                        (click)="onDelete($event)" 
+                        (click)="getDepartment(dept.departmentId)" 
                         type="button" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-trash" viewBox="0 0 16 16">
@@ -110,4 +116,4 @@
     <div class="alert alert-success" role="alert" id="delete-success-alert">
         Department Delete Successfully
     </div>
-</div>
+</div>  

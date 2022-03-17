@@ -63,7 +63,7 @@ export class ShowDeleteDepartmentComponent implements OnInit {
   }
 
   onDelete(data: any){
-    console.log(data);
+    // console.log(data);
     // this.departmentService.deleteDepartment(data.departmentId.toString()).subscribe(res => {
     //   var closeModalBtn = document.getElementById('add-edit-modal-close');
     //   if(closeModalBtn) {
