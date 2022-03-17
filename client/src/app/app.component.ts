@@ -2,8 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Department } from './_models/department.model';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

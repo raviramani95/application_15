@@ -1,54 +1,113 @@
-<!-- <button type="button" class="btn btn-primary" (click)="openModal(template)">Create template modal</button>
- 
-<ng-template #template>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">Modal</h4>
-    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
-      <span aria-hidden="true" class="visually-hidden">&times;</span>
-    </button>
+<!-- <app-show-delete-department></app-show-delete-department> -->
+<button type="button" class="btn btn-primary float-end m-2" data-bs-toggle="modal" 
+    data-bs-target="#staticBackdrop" (click)="onAddClick()">
+    Add Designation
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" 
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title" 
+            id="staticBackdropLabel">
+            {{ModalTitle}}
+        </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="modalClose()" id="add-edit-modal-close"
+            ></button>
+        </div>
+        <div class="modal-body">
+            <form autocomplete="off">
+                <div class="form-froup form-row">
+                    <div *ngIf="addMode">
+                        <label class="col-sm-4 col-form-label ml">Designation Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" 
+                            [(ngModel)]="newDesignationName" 
+                            placeholder="Enter Designation Name" 
+                            name="newDesignation" >
+                    </div>
+                    </div>
+                    <div angif="!addMode">
+                        <label class="col-sm-4 col-form-label ml">Designation Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" 
+                            [(ngModel)]="updateDesignationName" 
+                            name="updateDesignation">
+                    </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button (click)="onAddDesignation()" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
+                    <button (click)="onUpdateDesignation()" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
+                    <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
+                </div>
+            </form>
+        </div>
+        
+      </div>
+    </div>
   </div>
-  <div class="modal-body">
-    This is a modal.
-  </div>
-</ng-template> -->
 
 <div class="container">
     <table class="table table-hover" style="border-style:double;">
         <thead>
             <tr>
-                <th scope="col">DepartName</th>
+                <th scope="col">Id</th>
+                <th scope="col">Designation</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let desig of designations">
+                <td>{{desig.designationId}}</td>
                 <td>{{desig.designationName}}</td>
-                <td>
-                    <button class="btn btn-primary">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path
-                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                            <path fill-rule="evenodd"
-                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                        </svg>
-                    </button>
-                </td>
+                <ng-container >
+                    <td>
+                        <button class="btn btn-primary me-2 mb-1" 
+                            (click)="updateDesignation($event)" type="submit" 
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path
+                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                    <path fill-rule="evenodd"
+                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                </svg>
+                        </button>
+                    </td>
+                </ng-container>
+                
                 <td>
-                    <button class="btn btn-danger">
-
+                    <button class="btn btn-danger me-2 mb-1" 
+                        (click)="onDelete($event)" 
+                        type="button" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-trash" viewBox="0 0 16 16">
-                            <path
-                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                            <path fill-rule="evenodd"
-                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                        </svg>
+                                class="bi bi-trash" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                <path fill-rule="evenodd"
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg>
                     </button>
+                    
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <div class="alert alert-success" role="alert" id="add-success-alert">
+        Designation add Successfully
+    </div>
+    <div class="alert alert-success" role="alert" id="update-success-alert">
+        Designation update Successfully
+    </div>
+    <div class="alert alert-success" role="alert" id="delete-success-alert">
+        Designation Delete Successfully
+    </div>
 </div>

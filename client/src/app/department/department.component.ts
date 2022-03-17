@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-// import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { environment } from 'src/environments/environment';
 import { DepartmentService } from '../_services/department.service';
+import { map, Observable } from 'rxjs';
 import { Department } from '../_models/department.model';
 
 @Component({
@@ -11,62 +10,108 @@ import { Department } from '../_models/department.model';
 })
 export class DepartmentComponent implements OnInit {
 
-  departments: any =[];
-  // modalRef?: BsModalRef;
-  apiUrl = environment.apiUrl;
-
+  departments = [];
+  addMode = false;
   ModalTitle: string;
   ActivateAddEditDepComp = false;
-  dept: any;
+  departmentLists$: Observable<Department[]>;
 
+  newDepartmentName = "";
 
-  constructor(private departmentService: DepartmentService,
-    )
-   { }
+  updateDepartmentName = "";
 
-  ngOnInit(){
+  constructor(private deptService: DepartmentService) { }
+
+  ngOnInit(): void {
     this.getDepartments();
-    this.dd();
   }
 
   getDepartments(){
-    this.departmentService.getDepartments().subscribe( resData => {
-      this.departments = resData;
-    },error => {
-      console.log(error);
-    });
+    // this.departmentLists$ = this.deptService.getDepartments();
+    this.deptService.getDepartments().subscribe(res =>{
+      this.departments = res;
+    })
   }
 
-  onClose(){
-    this.ActivateAddEditDepComp = false;
+  onAddDepartment(){
+    this.addMode =true;
+    let department = { departmentName: this.newDepartmentName}
+    this.deptService.addDepartment(department).subscribe(res => {
+      var closebtn = document.getElementById('add-edit-modal-close');
+      if(closebtn){
+        closebtn.click();
+      }
+      var showAddSuccess = document.getElementById('add-success-alert');
+       if(showAddSuccess) {
+         showAddSuccess.style.display = "block";
+       }
+       setTimeout(function() {
+         if(showAddSuccess) {
+           showAddSuccess.style.display = "none"
+         }
+       }, 4000);
+    });
     this.getDepartments();
   }
 
-  onAddClick(){
-    this.dept = {
-      departmentId:0,
-      departmentName:"  "
+  onUpdateDepartment(event: Event){
+    var dept = {
+      departmentId: 1,
+      departmentName: this.updateDepartmentName
     }
-    this.ModalTitle = "Department";
-    this.ActivateAddEditDepComp = true;
-    console.log("i am click");
+    console.log(event);
+    console.log(dept)
+    this.deptService.updateDepartment(1, dept).subscribe(res => {
+      var closeModalBtn = document.getElementById('add-edit-modal-close');
+      if(closeModalBtn) {
+        closeModalBtn.click();
+      }
+
+      var showUpdateSuccess = document.getElementById('update-success-alert');
+      if(showUpdateSuccess) {
+        showUpdateSuccess.style.display = "block";
+      }
+      setTimeout(function() {
+        if(showUpdateSuccess) {
+          showUpdateSuccess.style.display = "none"
+        }
+      }, 4000);
+    });
+  }
+  updateDepartment(id: number){
+    this.addMode =false;
+    this.ModalTitle = "Update Department";  
   }
 
-  dd(){
-    console.log(this.departments);
-  //   let li = [];
-  //   for(let de of this.departments){
-  //     li.push(de);
-  //   }
-    
+  
+  onDelete(event: any){
+    this.deptService.deleteDepartment(event.departmentId).subscribe(res => {
+      var closeModalBtn = document.getElementById('add-edit-modal-close');
+      if(closeModalBtn) {
+        closeModalBtn.click();
+      }
 
-  //   for (let i = 0; i < this.departments.length; i++) {
-  //     li.push(this.departments[i]);
-  //   }
-  // console.log(li);
-  // openModal(template: TemplateRef<any>) {
-  //   this.modalRef = this.modalService.show(template);
-  // }
+      var showDeleteSuccess = document.getElementById('delete-success-alert');
+      if(showDeleteSuccess) {
+        showDeleteSuccess.style.display = "block";
+      }
+      setTimeout(function() {
+        if(showDeleteSuccess) {
+          showDeleteSuccess.style.display = "none"
+        }
+      }, 4000);
+
+      this.departmentLists$ = this.deptService.getDepartments();
+    });
   }
 
+
+  onAddClick(){
+    this.addMode = true;
+    this.ModalTitle = "Add Department";
+  }
+
+  modalClose(){
+
+  }
 }

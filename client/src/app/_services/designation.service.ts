@@ -2,17 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Designation } from '../_models/designation.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DesignationService {
-  designation: any;
+  designation: Designation;
   apiUrl = environment.apiUrl + 'designations';
 
   constructor(private http: HttpClient) { }
 
-  getDesignations():Observable<any[]>{
+  getDesignations():Observable<Designation[]>{
     return this.http.get<any>(this.apiUrl);
   }
   

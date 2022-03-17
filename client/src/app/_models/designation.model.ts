@@ -1,4 +1,4 @@
-export interface Designaation{
+export class Designation{
     designationId: number;
     designationName: string;
 }

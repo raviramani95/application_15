@@ -56,7 +56,7 @@ namespace application.Controllers
             _context.Department.Add(department);
             await _context.SaveChangesAsync();
 
-            return Ok("Department Successfully added..");
+            return NoContent();
             /*return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);*/
         }
 
@@ -86,11 +86,11 @@ namespace application.Controllers
                     throw;
                 }
             }
-            return Ok("Successfully updated department");
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDepartment(int id)
+        public async Task<ActionResult> DeleteDepartment(int id)
         {
             var department = await _context.Department.FindAsync(id);
             if (department == null) return NotFound("Employee Not found");
@@ -98,7 +98,7 @@ namespace application.Controllers
             _context.Department.Remove(department);
             await _context.SaveChangesAsync();
 
-            return Ok("Successfully deleted");
+            return NoContent();
         }
         private bool DepartmentExists(int id)
         {

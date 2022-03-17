@@ -9,6 +9,7 @@ import { Department } from '../_models/department.model';
 })
 export class DepartmentService {
   apiUrl = environment.apiUrl;
+  existsDepartment = ["HR", "Administrator", "Account", "Research & Development"];
 
   constructor(private http: HttpClient) { }
 
@@ -20,24 +21,25 @@ export class DepartmentService {
     return this.http.get<Department>(this.apiUrl + 'departments/' + deptId);
   }
 
-  addDepartment(department: Department): Observable<Department>{
+  addDepartment(department: any): Observable<Department>{
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
 
     return this.http.post<Department>(this.apiUrl + 'departments/',  
       department, httpOptions);  
   }
 
-  updateDepartment(department: Department): Observable<Department>{
+  updateDepartment(id: number,department: Department): Observable<Department>{
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
 
-    return this.http.put<Department>(this.apiUrl + 'departments/',  
-      department, httpOptions);  
+    return this.http.put<Department>(this.apiUrl + 'departments/' + id, department, httpOptions);  
   }
 
-  deleteDepartment(deptId: string): Observable<number> {  
+  deleteDepartment(deptId: string): Observable<number> { 
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };  
     return this.http.delete<number>(this.apiUrl + 'departments/' +deptId,  
       httpOptions);  
   }  
+  
+
   
 }

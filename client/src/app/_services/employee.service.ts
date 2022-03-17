@@ -21,6 +21,10 @@ export class EmployeeService {
     return this.http.post(this.apiUrl, emp);
   }
 
+  addEmployee(emp: any){
+    return this.http.put(this.apiUrl ,emp);
+  }
+
   updateEmployee(emp: any){
     return this.http.put(this.apiUrl, emp);
   }
