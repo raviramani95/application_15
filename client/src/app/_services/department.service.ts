@@ -23,7 +23,7 @@ export class DepartmentService {
     return this.http.get<Department>(this.apiUrl + 'departments/' + deptId);
   }
 
-  addDepartment(department: any): Observable<Department>{
+  addDepartment(department: Department): Observable<Department>{
     const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
 
     return this.http.post<Department>(this.apiUrl + 'departments/',  
@@ -37,7 +37,6 @@ export class DepartmentService {
   }
 
   deleteDepartment(deptId: any): Observable<Department> { 
-    debugger;
     return this.http.delete<Department>(this.apiUrl + 'departments/' +deptId); 
   }  
   

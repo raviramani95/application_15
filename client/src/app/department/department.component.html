@@ -69,14 +69,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let dept of departments">
+            <tr *ngFor="let dept of departmentLists$ | async">
                 <th shope="row">{{dept.departmentId}}</th>
                 <td>{{dept.departmentName}}</td>
 
-                <ng-container >
+               
                     <td>
                     <button class="btn btn-primary me-2 mb-1" 
-                        (click)="updateDepartment($event)" type="submit" 
+                        (click)="getDepartment(dept.departmentId)" type="submit" 
                         data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -87,11 +87,11 @@
                             </svg>
                     </button>
                 </td>
-                </ng-container>
+                
                 
                 <td>
                     <button class="btn btn-danger me-2 mb-1" 
-                        (click)="getDepartment(dept.departmentId)" 
+                        (click)="onDelete(dept.departmentId)" 
                         type="button" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-trash" viewBox="0 0 16 16">

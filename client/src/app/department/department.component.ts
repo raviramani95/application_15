@@ -27,6 +27,8 @@ export class DepartmentComponent implements OnInit {
   updateDepartmentId = "";
   deptForm: FormGroup;
 
+  updateId: number;
+
   listData: any;
 
   constructor(private deptService: DepartmentService, private fb:FormBuilder) { 
@@ -44,23 +46,28 @@ export class DepartmentComponent implements OnInit {
 
   getDepartments(){
     // this.departmentLists$ = this.deptService.getDepartments();
-    this.deptService.getDepartments().subscribe(res =>{
-      this.departments = res;
-    })
+    this.departmentLists$ = this.deptService.getDepartments();
   }
 
   getDepartment(id: any){
+    this.updateId = id;
     console.log(id);
-      this.deptService.getDepartmentById(id).subscribe(res => this.department = res);
-      console.log(this.department);
+    this.deptService.getDepartmentById(id).subscribe(res => this.department = res);
+    console.log(this.department);
   }
 
   onAddDepartment(){
-    this.listData.push(this.deptForm.value);
-    this.deptForm.reset();
-    console.log(this.listData);
-    this.addMode =true;
-    let department = { departmentName: this.newDepartmentName}
+    // this.listData.push(this.deptForm.value);
+    // this.deptForm.reset();
+    // console.log(this.listData);
+
+    // this.addMode =true;
+
+    let department = {
+      departmentId: 0,
+      departmentName: this.newDepartmentName
+    }
+
     this.deptService.addDepartment(department).subscribe(res => {
       var closebtn = document.getElementById('add-edit-modal-close');
       if(closebtn){
@@ -76,20 +83,16 @@ export class DepartmentComponent implements OnInit {
          }
        }, 4000);
     });
-    this.getDepartments();
   }
 
-  onUpdateDepartment(event: Event){
-    this.listData.push(this.deptForm.value);
-    this.deptForm.reset();
-    console.log(this.listData);
-    var dept = {
-      departmentId: 1,
+  onUpdateDepartment(){
+    
+    let department = {
+      departmentId: this.updateId,
       departmentName: this.updateDepartmentName
     }
-    console.log(event);
-    console.log(dept)
-    this.deptService.updateDepartment(1, dept).subscribe(res => {
+
+    this.deptService.updateDepartment(department.departmentId, department).subscribe(res => {
       var closeModalBtn = document.getElementById('add-edit-modal-close');
       if(closeModalBtn) {
         closeModalBtn.click();
@@ -114,26 +117,26 @@ export class DepartmentComponent implements OnInit {
 
   
   onDelete(data: any){
-    console.log(data.departmentId);
-    console.log(this.department);
-    // this.deptService.deleteDepartment(event.departmentId).subscribe(res => {
-    //   var closeModalBtn = document.getElementById('add-edit-modal-close');
-    //   if(closeModalBtn) {
-    //     closeModalBtn.click();
-    //   }
+    console.log(data);
+    
+    this.deptService.deleteDepartment(data).subscribe(res => {
+      var closeModalBtn = document.getElementById('add-edit-modal-close');
+      if(closeModalBtn) {
+        closeModalBtn.click();
+      }
 
-    //   var showDeleteSuccess = document.getElementById('delete-success-alert');
-    //   if(showDeleteSuccess) {
-    //     showDeleteSuccess.style.display = "block";
-    //   }
-    //   setTimeout(function() {
-    //     if(showDeleteSuccess) {
-    //       showDeleteSuccess.style.display = "none"
-    //     }
-    //   }, 4000);
+      var showDeleteSuccess = document.getElementById('delete-success-alert');
+      if(showDeleteSuccess) {
+        showDeleteSuccess.style.display = "block";
+      }
+      setTimeout(function() {
+        if(showDeleteSuccess) {
+          showDeleteSuccess.style.display = "none"
+        }
+      }, 4000);
 
-    //   this.departmentLists$ = this.deptService.getDepartments();
-    // });
+      this.departmentLists$ = this.deptService.getDepartments();
+    });
   }
 
 
@@ -142,7 +145,5 @@ export class DepartmentComponent implements OnInit {
     this.ModalTitle = "Add Department";
   }
 
-  modalClose(){
-
-  }
+  modalClose(){ }
 }
