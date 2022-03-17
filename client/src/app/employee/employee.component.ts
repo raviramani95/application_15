@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Employee } from '../_models/employee.model';
 import { EmployeeService } from '../_services/employee.service';
@@ -10,17 +11,29 @@ import { EmployeeService } from '../_services/employee.service';
 })
 export class EmployeeComponent implements OnInit {
 
-  employees: Employee[];
+  employee: Employee;
+  empForm: FormGroup;
+  listData: any;
 
-  constructor(private empService: EmployeeService
-    ) { }
+  addMode = false;
+  ModalTitle: string;
+  employeeList$: Observable<Employee[]>;
 
-    addMode = false;
-    ModalTitle: string;
-    ActivateAddEditDepComp = false;
+  updateId: number;
 
-    employeeList$: Observable<Employee[]>;
-  
+
+  constructor(private empService: EmployeeService, private fb:FormBuilder) 
+  { 
+    this.listData = [];
+    this.empForm = this.fb.group({
+      newFname : ['', Validators.required],
+      newLname : ['', Validators.required],
+      newGenderId : ['', Validators.required],
+      newDepartmentId : ['', Validators.required],
+      newDesignationId : ['', Validators.required]
+    });
+  }
+
     nFname = "";
     nLname = "";
     nGenderId: number;
@@ -34,17 +47,33 @@ export class EmployeeComponent implements OnInit {
     getEmployees(){
       this.employeeList$ = this.empService.getEmployees();
     }
-  
+    
+    getEmployee(id: any){
+      this.addMode = false;
+      this.updateEmployee();
+      this.updateId = id;
+      console.log(id);
+      this.empService.getEmployeeById(id).subscribe(res => this.employee = res);
+      console.log(this.employee);
+    }
+
+    onAddClick(){
+      this.addMode = true;
+      this.ModalTitle = "Add Employee";
+    }
+
     onAddEmployee(){
       this.addMode =true;
-      let employee = [{
+
+      let employee = {
         employeeId: 0,
         employeeFirstName: this.nFname,
         employeeLastName: this.nLname,
         genderId: this.nGenderId,
         departmentId: this.nDepartmentId,
         designationId: this.nDesignationId
-      }]
+      }
+  
       this.empService.addEmployee(employee).subscribe(res => {
         var closebtn = document.getElementById('add-edit-modal-close');
         if(closebtn){
@@ -60,19 +89,25 @@ export class EmployeeComponent implements OnInit {
            }
          }, 4000);
       });
-      this.getEmployees();
+      this.employeeList$;
+      this.addMode = false;
     }
-  
-    onUpdateEmployee(event: Event){
-      let employee = [{
-        employeeId: 0,
+    
+    updateEmployee(){
+      this.addMode =false;
+      this.ModalTitle = "Update Employee";  
+    }
+
+    onUpdateEmployee(){
+      let employee = {
+        employeeId: this.updateId,
         employeeFirstName: this.nFname,
         employeeLastName: this.nLname,
         genderId: this.nGenderId,
         departmentId: this.nDepartmentId,
         designationId: this.nDesignationId
-      }]
-      this.empService.updateEmployee(employee).subscribe(res => {
+      }
+      this.empService.updateEmployee(employee.employeeId, employee).subscribe(res => {
         var closeModalBtn = document.getElementById('add-edit-modal-close');
         if(closeModalBtn) {
           closeModalBtn.click();
@@ -88,16 +123,11 @@ export class EmployeeComponent implements OnInit {
           }
         }, 4000);
       });
-    }
-
-    updateEmployee(id: number){
-      this.addMode =false;
-      this.ModalTitle = "Update Employee";  
+      this.employeeList$ = this.empService.getEmployees();
     }
   
-    
-    onDelete(event: any){
-      this.empService.deleteEmployee(event.designationId).subscribe(res => {
+    onDelete(data: any){
+      this.empService.deleteEmployee(data).subscribe(res => {
         var closeModalBtn = document.getElementById('add-edit-modal-close');
         if(closeModalBtn) {
           closeModalBtn.click();
@@ -116,15 +146,7 @@ export class EmployeeComponent implements OnInit {
         this.employeeList$ = this.empService.getEmployees();
       });
     }
-  
-  
-    onAddClick(){
-      this.addMode = true;
-      this.ModalTitle = "Add Employee";
-    }
-  
-    modalClose(){
-  
-    }
+
+    modalClose(){  }
 
 }

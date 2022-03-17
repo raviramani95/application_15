@@ -1,35 +1,40 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Employee } from '../_models/employee.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
 
-  employees: any;
-  apiUrl = environment.apiUrl + 'employee';
+  employees: Employee[];
+  apiUrl = environment.apiUrl + 'employee/';
 
   constructor(private http: HttpClient) { }
 
-  getEmployees():Observable<any[]>{
+  getEmployees():Observable<Employee[]>{
     return this.http.get<any>(this.apiUrl);
   }
   
-  getEmployee(emp: any){
-    return this.http.post(this.apiUrl, emp);
+  getEmployeeById(deptId: any): Observable<Employee>{
+    return this.http.get<Employee>(this.apiUrl + deptId);
   }
 
-  addEmployee(emp: any){
-    return this.http.put(this.apiUrl ,emp);
+  addEmployee(employee: Employee): Observable<Employee>{
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+
+    return this.http.post<Employee>(this.apiUrl ,employee, httpOptions);  
   }
 
-  updateEmployee(emp: any){
-    return this.http.put(this.apiUrl, emp);
+  updateEmployee(id: any,employee: Employee): Observable<Employee>{
+    const httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json'}) };
+
+    return this.http.put<Employee>(this.apiUrl + id, employee, httpOptions);  
   }
 
-  deleteEmployee(emp: any){
-    return this.http.delete(this.apiUrl, emp)
-  }
+  deleteEmployee(deptId: any): Observable<Employee> { 
+    return this.http.delete<Employee>(this.apiUrl +deptId); 
+  }  
 }

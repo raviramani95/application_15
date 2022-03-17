@@ -1,12 +1,12 @@
-<!-- <app-show-delete-department></app-show-delete-department> -->
 <button type="button" class="btn btn-primary float-end m-2" data-bs-toggle="modal" 
     data-bs-target="#staticBackdrop" (click)="onAddClick()">
     Add Designation
   </button>
   
-  <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" 
-    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" 
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" 
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -19,33 +19,36 @@
             ></button>
         </div>
         <div class="modal-body">
-            <form autocomplete="off">
-                <div class="form-froup form-row">
-                    <div *ngIf="addMode">
-                        <label class="col-sm-4 col-form-label ml">Designation Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" 
-                            [(ngModel)]="newDesignationName" 
-                            placeholder="Enter Designation Name" 
-                            name="newDesignation" >
+                <form autocomplete="off" [formGroup]="desigForm">
+                        <div *ngIf="addMode" claa="from-group">
+                            <label class="col-sm-4 col-form-label ml">Designation Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" 
+                                [(ngModel)]="newDesignationName" 
+                                placeholder="Enter Designation Name" 
+                                name="newDesignation" formControlName="designationName" >
+                        </div>
+                        </div>
+
+                        <div [hidden]="addMode" claa="from-group">
+                            <label class="col-sm-4 col-form-label ml">Designation Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" 
+                                [(ngModel)]="updateDesignationName" 
+                                name="updateDesignation" formControlName="designationName">
+                        </div>
+                        </div>
+                   
+                    
+                    <div class="modal-footer">
+                        <button (click)="onAddDesignation()" *ngIf="addMode" 
+                            class="btn btn-primary" type="button">Add</button>
+                        <button (click)="onUpdateDesignation()" *ngIf="!addMode" 
+                            class="btn btn-primary" type="button">Update</button>  
+                        <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
                     </div>
-                    </div>
-                    <div angif="!addMode">
-                        <label class="col-sm-4 col-form-label ml">Designation Name</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" 
-                            [(ngModel)]="updateDesignationName" 
-                            name="updateDesignation">
-                    </div>
-                    </div>
-                </div>
-                
-                <div class="modal-footer">
-                    <button (click)="onAddDesignation()" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
-                    <button (click)="onUpdateDesignation()" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
-                    <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
-                </div>
-            </form>
+                </form>
+            
         </div>
         
       </div>
@@ -56,36 +59,36 @@
     <table class="table table-hover" style="border-style:double;">
         <thead>
             <tr>
-                <th scope="col">Id</th>
+                <th scope="col">DesignationId</th>
                 <th scope="col">Designation</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let desig of designations">
-                <td>{{desig.designationId}}</td>
+            <tr *ngFor="let desig of designationsList$ | async">
+                <th shope="row">{{desig.designationId}}</th>
                 <td>{{desig.designationName}}</td>
 
-                <ng-container >
+               
                     <td>
-                        <button class="btn btn-primary me-2 mb-1" 
-                            (click)="updateDesignation($event)" type="submit" 
-                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path
-                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path fill-rule="evenodd"
-                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                </svg>
-                        </button>
-                    </td>
-                </ng-container>
+                    <button class="btn btn-primary me-2 mb-1" 
+                        (click)="getDesignation(desig.designationId)" type="submit" 
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path
+                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd"
+                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg>
+                    </button>
+                </td>
+                
                 
                 <td>
                     <button class="btn btn-danger me-2 mb-1" 
-                        (click)="onDelete($event)" 
+                        (click)="onDelete(desig.designationId)" 
                         type="button" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-trash" viewBox="0 0 16 16">
@@ -102,12 +105,12 @@
     </table>
 
     <div class="alert alert-success" role="alert" id="add-success-alert">
-        Designation add Successfully
+        Department add Successfully
     </div>
     <div class="alert alert-success" role="alert" id="update-success-alert">
-        Designation update Successfully
+        Department update Successfully
     </div>
     <div class="alert alert-success" role="alert" id="delete-success-alert">
-        Designation Delete Successfully
+        Department Delete Successfully
     </div>
-</div>
+</div>  

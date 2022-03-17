@@ -1,4 +1,5 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Designation } from '../_models/designation.model';
 import { DesignationService } from '../_services/designation.service'
@@ -11,110 +12,126 @@ import { DesignationService } from '../_services/designation.service'
 })
 export class DesignationComponent implements OnInit {
 
-  designations: Designation[];
+  designation: Designation;
+  desigForm: FormGroup;
+  listData: any;
 
-  constructor(private desService: DesignationService,
-    ) { }
+  addMode = false;
+  ModalTitle: string;
+  designationsList$: Observable<Designation[]>;
 
-    addMode = false;
-    ModalTitle: string;
-    ActivateAddEditDepComp = false;
+  newDesignationName = "";
+  updateDesignationName = "";
+  updateId: number;
 
-    departmentLists$: Observable<Designation[]>;
-  
-    newDesignationName = "";
-    updateDesignationName = "";
-  
-    ngOnInit(): void {
-      this.getDesignation();
+  constructor(private desigService: DesignationService, private fb:FormBuilder) { 
+    this.listData = [];
+    this.desigForm = this.fb.group({
+      designationId : ['', Validators.required],
+      designationName : ['', Validators.required],
+    });
+  }
+
+  ngOnInit(): void {
+    this.getDesignations();
+  }
+
+  getDesignations(){
+    this.designationsList$ = this.desigService.getDesignations();
+  }
+
+  getDesignation(id: any){
+    this.addMode = false;
+    this.updateId = id;
+    this.updateDesignation();
+    console.log(id);
+    this.desigService.getDesignationById(id).subscribe(res => this.designation = res);
+    console.log(this.designation);
+  }
+
+  onAddClick(){
+    this.addMode = true;
+    this.ModalTitle = "Add Designation";
+  }
+
+  onAddDesignation(){
+
+    let designation = {
+      designationId: 0,
+      designationName: this.newDesignationName
     }
-  
-    getDesignation(){
-      this.desService.getDesignations().subscribe(res =>{
-        this.designations = res;
-      })
-    }
-  
-    onAddDesignation(){
-      this.addMode =true;
-      let designation = { designationName: this.newDesignationName}
-      this.desService.addDesignation(designation).subscribe(res => {
-        var closebtn = document.getElementById('add-edit-modal-close');
-        if(closebtn){
-          closebtn.click();
-        }
-        var showAddSuccess = document.getElementById('add-success-alert');
-         if(showAddSuccess) {
-           showAddSuccess.style.display = "block";
-         }
-         setTimeout(function() {
-           if(showAddSuccess) {
-             showAddSuccess.style.display = "none"
-           }
-         }, 4000);
-      });
-      this.getDesignation();
-    }
-  
-    onUpdateDesignation(event: Event){
-      var designation = {
-        designationId: 1,
-        designationName: this.updateDesignationName
+
+    this.desigService.addDesignation(designation).subscribe(res => {
+      var closebtn = document.getElementById('add-edit-modal-close');
+      if(closebtn){
+        closebtn.click();
       }
-      console.log(event);
-      console.log(designation)
-      this.desService.updateDesignation(designation).subscribe(res => {
-        var closeModalBtn = document.getElementById('add-edit-modal-close');
-        if(closeModalBtn) {
-          closeModalBtn.click();
-        }
-  
-        var showUpdateSuccess = document.getElementById('update-success-alert');
-        if(showUpdateSuccess) {
-          showUpdateSuccess.style.display = "block";
-        }
-        setTimeout(function() {
-          if(showUpdateSuccess) {
-            showUpdateSuccess.style.display = "none"
-          }
-        }, 4000);
-      });
+      var showAddSuccess = document.getElementById('add-success-alert');
+       if(showAddSuccess) {
+         showAddSuccess.style.display = "block";
+       }
+       setTimeout(function() {
+         if(showAddSuccess) {
+           showAddSuccess.style.display = "none"
+         }
+       }, 4000);
+    });
+    this.designationsList$;
+    this.addMode = false;
+  }
+
+  updateDesignation(){
+    this.addMode =false;
+    this.ModalTitle = "Update Designation";  
+  }
+
+  onUpdateDesignation(){
+    
+    let designation = {
+      designationId: this.updateId,
+      designationName: this.updateDesignationName
     }
 
-    updateDesignation(id: number){
-      this.addMode =false;
-      this.ModalTitle = "Update Designation";  
-    }
-  
+    this.desigService.updateDesignation(designation.designationId, designation).subscribe(res => {
+      var closeModalBtn = document.getElementById('add-edit-modal-close');
+      if(closeModalBtn) {
+        closeModalBtn.click();
+      }
+
+      var showUpdateSuccess = document.getElementById('update-success-alert');
+      if(showUpdateSuccess) {
+        showUpdateSuccess.style.display = "block";
+      }
+      setTimeout(function() {
+        if(showUpdateSuccess) {
+          showUpdateSuccess.style.display = "none"
+        }
+      }, 4000);
+    });
+    this.designationsList$ = this.desigService.getDesignations();
+  }
+
+  onDelete(data: any){
+    console.log(data);
     
-    onDelete(event: any){
-      this.desService.deleteDesignation(event.designationId).subscribe(res => {
-        var closeModalBtn = document.getElementById('add-edit-modal-close');
-        if(closeModalBtn) {
-          closeModalBtn.click();
-        }
-  
-        var showDeleteSuccess = document.getElementById('delete-success-alert');
+    this.desigService.deleteDesignation(data).subscribe(res => {
+      var closeModalBtn = document.getElementById('add-edit-modal-close');
+      if(closeModalBtn) {
+        closeModalBtn.click();
+      }
+
+      var showDeleteSuccess = document.getElementById('delete-success-alert');
+      if(showDeleteSuccess) {
+        showDeleteSuccess.style.display = "block";
+      }
+      setTimeout(function() {
         if(showDeleteSuccess) {
-          showDeleteSuccess.style.display = "block";
+          showDeleteSuccess.style.display = "none"
         }
-        setTimeout(function() {
-          if(showDeleteSuccess) {
-            showDeleteSuccess.style.display = "none"
-          }
-        }, 4000);
-  
-        this.departmentLists$ = this.desService.getDesignations();
-      });
-    }
-  
-  
-    onAddClick(){
-      this.addMode = true;
-      this.ModalTitle = "Add Designation";
-    }
-  
-    modalClose(){
-  
-    }
+      }, 4000);
+    });
+    this.designationsList$ = this.desigService.getDesignations();
+  }
+
+  modalClose(){ }
 }

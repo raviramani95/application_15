@@ -11,28 +11,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class DepartmentComponent implements OnInit {
 
-  departments: Department[];
   department: Department;
-  action: string = "Add";
-
+  deptForm: FormGroup;
+  listData: any;
 
   addMode = false;
   ModalTitle: string;
-  ActivateAddEditDepComp = false;
   departmentLists$: Observable<Department[]>;
 
   newDepartmentName = "";
-
   updateDepartmentName = "";
-  updateDepartmentId = "";
-  deptForm: FormGroup;
-
   updateId: number;
 
-  listData: any;
-
   constructor(private deptService: DepartmentService, private fb:FormBuilder) { 
-
     this.listData = [];
     this.deptForm = this.fb.group({
       dipartmentId : ['', Validators.required],
@@ -45,23 +36,24 @@ export class DepartmentComponent implements OnInit {
   }
 
   getDepartments(){
-    // this.departmentLists$ = this.deptService.getDepartments();
     this.departmentLists$ = this.deptService.getDepartments();
   }
 
   getDepartment(id: any){
+    this.addMode = false;
+    this.updateDepartment();
     this.updateId = id;
     console.log(id);
     this.deptService.getDepartmentById(id).subscribe(res => this.department = res);
     console.log(this.department);
   }
 
-  onAddDepartment(){
-    // this.listData.push(this.deptForm.value);
-    // this.deptForm.reset();
-    // console.log(this.listData);
+  onAddClick(){
+    this.addMode = true;
+    this.ModalTitle = "Add Department";
+  }
 
-    // this.addMode =true;
+  onAddDepartment(){
 
     let department = {
       departmentId: 0,
@@ -83,6 +75,13 @@ export class DepartmentComponent implements OnInit {
          }
        }, 4000);
     });
+    this.departmentLists$;
+    this.addMode = false;
+  }
+
+  updateDepartment(){
+    this.addMode =false;
+    this.ModalTitle = "Update Department";  
   }
 
   onUpdateDepartment(){
@@ -108,14 +107,9 @@ export class DepartmentComponent implements OnInit {
         }
       }, 4000);
     });
+    this.departmentLists$ = this.deptService.getDepartments();
   }
 
-  updateDepartment(id: number){
-    this.addMode =false;
-    this.ModalTitle = "Update Department";  
-  }
-
-  
   onDelete(data: any){
     console.log(data);
     
@@ -134,15 +128,8 @@ export class DepartmentComponent implements OnInit {
           showDeleteSuccess.style.display = "none"
         }
       }, 4000);
-
-      this.departmentLists$ = this.deptService.getDepartments();
     });
-  }
-
-
-  onAddClick(){
-    this.addMode = true;
-    this.ModalTitle = "Add Department";
+    this.departmentLists$ = this.deptService.getDepartments();
   }
 
   modalClose(){ }

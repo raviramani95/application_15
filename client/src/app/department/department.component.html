@@ -1,10 +1,9 @@
-<!-- <app-show-delete-department></app-show-delete-department> -->
 <button type="button" class="btn btn-primary float-end m-2" data-bs-toggle="modal" 
     data-bs-target="#staticBackdrop" (click)="onAddClick()">
     Add Department
   </button>
   
-  <!-- Modal -->
+
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" 
     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -29,13 +28,8 @@
                                 name="newDepartment" formControlName="dipartmentName" >
                         </div>
                         </div>
-                        <div angif="!addMode" claa="from-group">
-                            <!-- <label class="col-sm-4 col-form-label ml">Department Id</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" 
-                                    [(ngModel)]="updateDepartmentId" 
-                                    name="updateDepartment" formControlName="dipartmentId">
-                            </div> -->
+
+                        <div [hidden]="addMode" claa="from-group">
                             <label class="col-sm-4 col-form-label ml">Department Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" 
