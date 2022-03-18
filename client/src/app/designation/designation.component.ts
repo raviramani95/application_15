@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, Observable } from 'rxjs';
 import { Designation } from '../_models/designation.model';
 import { DesignationService } from '../_services/designation.service'
 import { NotificationService } from '../_services/notification.service';
@@ -32,8 +32,22 @@ export class DesignationComponent implements OnInit {
       designationName : ['', Validators.compose([
         Validators.required,
         Validators.pattern('[a-zA-Z][a-zA-Z ]+')
-      ])],
+      ]), this.desigValid()],
     });
+  }
+
+  desigValid(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return this.desigService.getDesignations().pipe(
+        map( res => {
+          for(let i in res){
+            if(control.value.toLowerCase() == res[i].designationName.toLowerCase()){
+              return {'desigExists': true};
+            }
+          }
+        })
+      )
+    };
   }
 
   ngOnInit(): void {

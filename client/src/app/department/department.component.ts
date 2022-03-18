@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { DepartmentService } from '../_services/department.service';
 import { map, Observable } from 'rxjs';
 import { Department } from '../_models/department.model';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NotificationService } from '../_services/notification.service';
 
 @Component({
@@ -30,30 +30,41 @@ export class DepartmentComponent implements OnInit {
     private notifyService : NotificationService) { 
     this.listData = [];
     this.deptForm = this.fb.group({
-      dipartmentName : ['', Validators.compose([
+      departmentName : ['',Validators.compose([
         Validators.required,
         Validators.pattern('[a-zA-Z][a-zA-Z ]+')
-      ])],
+      ]), this.deptValid()],
     });
   }
 
-  updateDeptList(){
-
+  deptValid(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
+      return this.deptService.getDepartments().pipe(
+        map( res => {
+          for(let i in res){
+            if(control.value.toLowerCase() == res[i].departmentName.toLowerCase()){
+              return {'deptExists': true};
+            }
+          }
+        })
+      )
+    };
   }
+
 
   ngOnInit(): void {
     this.getDepartments();
+    this.updateDeptList();
+  }
+
+
+  updateDeptList(){
     this.deptService.getDepartments().subscribe(res => {
-      let l = res;
-      // for(let i in res){
-      //   l.push(res[i])
-      // }
-      // this.deptList.push();
-      for(let i in l){
-        this.deptList.push(l[i].departmentName);
+      // let l = res;
+      for(let i in res){
+        this.deptList.push(res[i].departmentName.toLowerCase());
       }
-      console.log(l);
-      
+      // console.log(l);
       console.log(this.deptList);
     })
   }
@@ -74,6 +85,7 @@ export class DepartmentComponent implements OnInit {
   onAddClick(){
     this.addMode = true;
     this.ModalTitle = "Add Department";
+    console.log(this.deptList);
   }
 
   onAddDepartment(){

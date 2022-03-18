@@ -24,16 +24,19 @@
                         <div class="col-sm-10">
                             <input type="text" class="form-control" 
                                 [(ngModel)]="newDepartmentName" 
-                                placeholder="Enter Department Name" 
-                                name="newDepartment" formControlName="dipartmentName" >
+                                placeholder="Enter Department Name"
+                                name="newDepartment" formControlName="departmentName" >
                         </div>
-                        <div *ngIf="deptForm.controls['dipartmentName'].invalid && 
-                            (deptForm.controls['dipartmentName'].dirty || deptForm.controls['dipartmentName'].touched)" 
+                        <div *ngIf="deptForm.controls['departmentName'].invalid && 
+                            (deptForm.controls['departmentName'].dirty || deptForm.controls['departmentName'].touched)" 
                             class="alert alert-danger">
                             <!-- invalid Input -->
-                            <div *ngIf="deptForm.controls['dipartmentName'].errors.required">
-                                DipartmentName is required.
+                            <div *ngIf="deptForm.controls['departmentName'].errors.required" >
+                                DepartmentName is required.
                           </div>
+                            <div *ngIf="deptForm.get('departmentName').errors?.deptExists" >
+                                Department alredy exists
+                            </div>
                         </div>
                         </div>
 
@@ -42,14 +45,17 @@
                         <div class="col-sm-10">
                             <input type="text" class="form-control" 
                                 [(ngModel)]="updateDepartmentName" 
-                                name="updateDepartment" formControlName="dipartmentName">
+                                name="updateDepartment" formControlName="departmentName">
                         </div>
-                        <div *ngIf="deptForm.controls['dipartmentName'].invalid && 
-                        (deptForm.controls['dipartmentName'].dirty || deptForm.controls['dipartmentName'].touched)" 
+                        <div *ngIf="deptForm.controls['departmentName'].invalid && 
+                        (deptForm.controls['departmentName'].dirty || deptForm.controls['departmentName'].touched)" 
                         class="alert alert-danger">
-                        <div *ngIf="deptForm.controls['dipartmentName'].errors.required">
-                            DipartmentName is required.
-                      </div>
+                        <div *ngIf="deptForm.controls['departmentName'].errors.required">
+                            DepartmentName is required.
+                        </div>
+                        <div *ngIf="deptForm.get('departmentName').errors?.deptExists" >
+                            Department alredy exists
+                        </div>
                         </div>
                         </div>
                    

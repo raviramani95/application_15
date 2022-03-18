@@ -34,7 +34,10 @@
                             class="alert alert-danger">
                             <div *ngIf="desigForm.controls['designationName'].errors.required">
                                 Designation name is required.
-                          </div>
+                            </div>
+                            <div *ngIf="desigForm.get('designationName').errors?.desigExists" >
+                                Designation alredy exists
+                            </div>
                         </div>
                         </div>
 
@@ -51,7 +54,10 @@
                             class="alert alert-danger">
                             <div *ngIf="desigForm.controls['designationName'].errors.required">
                                 Designation name is required.
-                          </div>
+                            </div>
+                            <div *ngIf="desigForm.get('designationName').errors?.desigExists" >
+                                Designation alredy exists
+                            </div>
                         </div>
                         </div>
                    
