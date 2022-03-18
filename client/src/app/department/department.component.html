@@ -27,6 +27,14 @@
                                 placeholder="Enter Department Name" 
                                 name="newDepartment" formControlName="dipartmentName" >
                         </div>
+                        <div *ngIf="deptForm.controls['dipartmentName'].invalid && 
+                            (deptForm.controls['dipartmentName'].dirty || deptForm.controls['dipartmentName'].touched)" 
+                            class="alert alert-danger">
+                            <!-- invalid Input -->
+                            <div *ngIf="deptForm.controls['dipartmentName'].errors.required">
+                                DipartmentName is required.
+                          </div>
+                        </div>
                         </div>
 
                         <div [hidden]="addMode" claa="from-group">
@@ -36,12 +44,19 @@
                                 [(ngModel)]="updateDepartmentName" 
                                 name="updateDepartment" formControlName="dipartmentName">
                         </div>
+                        <div *ngIf="deptForm.controls['dipartmentName'].invalid && 
+                        (deptForm.controls['dipartmentName'].dirty || deptForm.controls['dipartmentName'].touched)" 
+                        class="alert alert-danger">
+                        <div *ngIf="deptForm.controls['dipartmentName'].errors.required">
+                            DipartmentName is required.
+                      </div>
+                        </div>
                         </div>
                    
                     
                     <div class="modal-footer">
-                        <button (click)="onAddDepartment()" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
-                        <button (click)="onUpdateDepartment()" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
+                        <button (click)="onAddDepartment()" [disabled]="!deptForm.valid" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
+                        <button (click)="onUpdateDepartment()" [disabled]="!deptForm.valid" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
                         <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
                     </div>
                 </form>
@@ -69,7 +84,7 @@
 
                
                     <td>
-                    <button class="btn btn-primary me-2 mb-1" 
+                    <button [disabled]="dept.departmentId <= 4" class="btn btn-primary me-2 mb-1" 
                         (click)="getDepartment(dept.departmentId)" type="submit" 
                         data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -84,7 +99,7 @@
                 
                 
                 <td>
-                    <button class="btn btn-danger me-2 mb-1" 
+                    <button [disabled]="dept.departmentId <= 4" class="btn btn-danger me-2 mb-1" 
                         (click)="onDelete(dept.departmentId)" 
                         type="button" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

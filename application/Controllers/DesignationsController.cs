@@ -56,7 +56,7 @@ namespace application.Controllers
             _context.Designation.Add(designation);
             await _context.SaveChangesAsync();
 
-            return Ok("Designation Successfully added..");
+            return NoContent();
             /*return CreatedAtAction("GetDepartment", new { id = department.DepartmentId }, department);*/
         }
 
@@ -86,7 +86,7 @@ namespace application.Controllers
                     throw;
                 }
             }
-            return Ok("Successfully updated designation");
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -98,7 +98,7 @@ namespace application.Controllers
             _context.Designation.Remove(designation);
             await _context.SaveChangesAsync();
 
-            return Ok("Successfully deleted");
+            return NoContent();
         }
         private bool DesignationExists(int id)
         {

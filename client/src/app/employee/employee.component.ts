@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Employee } from '../_models/employee.model';
 import { EmployeeService } from '../_services/employee.service';
+import { NotificationService } from '../_services/notification.service';
 
 @Component({
   selector: 'app-employee',
@@ -17,17 +18,27 @@ export class EmployeeComponent implements OnInit {
 
   addMode = false;
   ModalTitle: string;
-  employeeList$: Observable<Employee[]>;
+  updateMode = false;
+
+  employeeList$: Observable<any[]>;
+  empList: any[];
 
   updateId: number;
 
 
-  constructor(private empService: EmployeeService, private fb:FormBuilder) 
+  constructor(private empService: EmployeeService, private fb:FormBuilder,
+    private notifyService : NotificationService) 
   { 
     this.listData = [];
     this.empForm = this.fb.group({
-      newFname : ['', Validators.required],
-      newLname : ['', Validators.required],
+      newFname : ['', Validators.compose([
+        Validators.required,
+        Validators.pattern('[a-zA-Z][a-zA-Z ]+')
+      ])],
+      newLname : ['', Validators.compose([
+        Validators.required,
+        Validators.pattern('[a-zA-Z][a-zA-Z ]+')
+      ])],
       newGenderId : ['', Validators.required],
       newDepartmentId : ['', Validators.required],
       newDesignationId : ['', Validators.required]
@@ -43,13 +54,29 @@ export class EmployeeComponent implements OnInit {
     ngOnInit(): void {
       this.getEmployees();
     }
+
+    updateEmpList(){
+
+    }
   
     getEmployees(){
-      this.employeeList$ = this.empService.getEmployees();
+      // this.employeeList$ = this.empService.getEmployees();
+      this.empService.getEmployees().subscribe(res => {
+        const l = [];
+        this.empList = res;
+        for(let i in res){
+          // this.empList.push(res);
+          l.push(res[i]);
+        }
+        // this.empList.push(l);
+        this.empList = l;
+        console.log(this.empList);
+      })
+      console.log(this.employeeList$);
+      console.log(this.empList);
     }
     
     getEmployee(id: any){
-      this.addMode = false;
       this.updateEmployee();
       this.updateId = id;
       console.log(id);
@@ -91,10 +118,13 @@ export class EmployeeComponent implements OnInit {
       });
       this.employeeList$;
       this.addMode = false;
+      this.empForm.reset();
+      this.notifyService.showSuccess("Successfully Employee Added :)", "Success");
     }
     
     updateEmployee(){
       this.addMode =false;
+      this.updateMode = true;
       this.ModalTitle = "Update Employee";  
     }
 
@@ -124,6 +154,8 @@ export class EmployeeComponent implements OnInit {
         }, 4000);
       });
       this.employeeList$ = this.empService.getEmployees();
+      this.notifyService.showSuccess("Successfully Employee Updated :)", "Success");
+      this.empForm.reset();
     }
   
     onDelete(data: any){
@@ -145,8 +177,10 @@ export class EmployeeComponent implements OnInit {
   
         this.employeeList$ = this.empService.getEmployees();
       });
+      this.notifyService.showSuccess("Successfully Employee Delated :)", "Success");
+      this.empForm.reset();
     }
 
-    modalClose(){  }
+    modalClose(){ this.empForm.reset(); }
 
 }

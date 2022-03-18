@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Designation } from '../_models/designation.model';
 import { DesignationService } from '../_services/designation.service'
+import { NotificationService } from '../_services/notification.service';
 // import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
@@ -24,11 +25,14 @@ export class DesignationComponent implements OnInit {
   updateDesignationName = "";
   updateId: number;
 
-  constructor(private desigService: DesignationService, private fb:FormBuilder) { 
+  constructor(private desigService: DesignationService, private fb:FormBuilder,
+    private notifyService : NotificationService) { 
     this.listData = [];
     this.desigForm = this.fb.group({
-      designationId : ['', Validators.required],
-      designationName : ['', Validators.required],
+      designationName : ['', Validators.compose([
+        Validators.required,
+        Validators.pattern('[a-zA-Z][a-zA-Z ]+')
+      ])],
     });
   }
 
@@ -78,6 +82,7 @@ export class DesignationComponent implements OnInit {
     });
     this.designationsList$;
     this.addMode = false;
+    this.notifyService.showSuccess("Successfully Designation Added :)", "Success");
   }
 
   updateDesignation(){
@@ -109,6 +114,7 @@ export class DesignationComponent implements OnInit {
       }, 4000);
     });
     this.designationsList$ = this.desigService.getDesignations();
+    this.notifyService.showSuccess("Successfully Designation Updated :)", "Success");
   }
 
   onDelete(data: any){
@@ -131,6 +137,7 @@ export class DesignationComponent implements OnInit {
       }, 4000);
     });
     this.designationsList$ = this.desigService.getDesignations();
+    this.notifyService.showSuccess("Successfully Designation Delete :)", "Success");
   }
 
   modalClose(){ }

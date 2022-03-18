@@ -77,7 +77,7 @@ namespace application.Controllers
             _context.Employee.Add(employee);
             await _context.SaveChangesAsync();
 
-            return Ok("Employee Successfully added..");
+            return NoContent();
             /*return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);*/
         }
 
@@ -110,7 +110,7 @@ namespace application.Controllers
                     throw;
                 }
             }
-            return Ok("Employee Successfully Update..");
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
@@ -126,7 +126,7 @@ namespace application.Controllers
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
 
-            return Ok("Employee Successfully Deleteded..");
+            return NoContent();
         }
         private bool EmployeeExists(int id)
         {

@@ -24,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { ShowDeleteDepartmentComponent } from './department/show-delete-department/show-delete-department.component';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { DialogBoxComponent } from './dialog-box/dialog-box.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatInputModule
+    MatInputModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -3,6 +3,7 @@ import { DepartmentService } from '../_services/department.service';
 import { map, Observable } from 'rxjs';
 import { Department } from '../_models/department.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationService } from '../_services/notification.service';
 
 @Component({
   selector: 'app-department',
@@ -15,6 +16,8 @@ export class DepartmentComponent implements OnInit {
   deptForm: FormGroup;
   listData: any;
 
+  deptList: any[] = [];
+
   addMode = false;
   ModalTitle: string;
   departmentLists$: Observable<Department[]>;
@@ -23,16 +26,36 @@ export class DepartmentComponent implements OnInit {
   updateDepartmentName = "";
   updateId: number;
 
-  constructor(private deptService: DepartmentService, private fb:FormBuilder) { 
+  constructor(private deptService: DepartmentService, private fb:FormBuilder, 
+    private notifyService : NotificationService) { 
     this.listData = [];
     this.deptForm = this.fb.group({
-      dipartmentId : ['', Validators.required],
-      dipartmentName : ['', Validators.required],
+      dipartmentName : ['', Validators.compose([
+        Validators.required,
+        Validators.pattern('[a-zA-Z][a-zA-Z ]+')
+      ])],
     });
+  }
+
+  updateDeptList(){
+
   }
 
   ngOnInit(): void {
     this.getDepartments();
+    this.deptService.getDepartments().subscribe(res => {
+      let l = res;
+      // for(let i in res){
+      //   l.push(res[i])
+      // }
+      // this.deptList.push();
+      for(let i in l){
+        this.deptList.push(l[i].departmentName);
+      }
+      console.log(l);
+      
+      console.log(this.deptList);
+    })
   }
 
   getDepartments(){
@@ -77,6 +100,8 @@ export class DepartmentComponent implements OnInit {
     });
     this.departmentLists$;
     this.addMode = false;
+    this.deptForm.reset();
+    this.notifyService.showSuccess("Successfully Department add :)", "Success");
   }
 
   updateDepartment(){
@@ -108,6 +133,7 @@ export class DepartmentComponent implements OnInit {
       }, 4000);
     });
     this.departmentLists$ = this.deptService.getDepartments();
+    this.notifyService.showSuccess("Successfully Department update :)", "Success");
   }
 
   onDelete(data: any){
@@ -130,7 +156,8 @@ export class DepartmentComponent implements OnInit {
       }, 4000);
     });
     this.departmentLists$ = this.deptService.getDepartments();
+    this.notifyService.showSuccess("Successfully Department Delete :)", "Success");
   }
 
-  modalClose(){ }
+  modalClose(){ this.deptForm.reset()}
 }
