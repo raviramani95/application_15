@@ -11,6 +11,7 @@ namespace application.Models
         }
         public int DepartmentId { get; set; }
 
+        [Required]
         public string DepartmentName { get; set; }
 
         public ICollection<Employee> DEmployees { get; set; }

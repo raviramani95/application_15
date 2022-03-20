@@ -19,7 +19,7 @@
         </div>
         <div class="modal-body">
                 <form autocomplete="off" [formGroup]="deptForm">
-                        <div *ngIf="addMode" claa="from-group">
+                        <div claa="from-group">
                             <label class="col-sm-4 col-form-label ml">Department Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" 
@@ -40,11 +40,11 @@
                         </div>
                         </div>
 
-                        <div [hidden]="addMode" claa="from-group">
+                        <!-- <div [hidden]="addMode" claa="from-group">
                             <label class="col-sm-4 col-form-label ml">Department Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" 
-                                [(ngModel)]="updateDepartmentName" 
+                                [(ngModel)]="updateDepartmentName"
                                 name="updateDepartment" formControlName="departmentName">
                         </div>
                         <div *ngIf="deptForm.controls['departmentName'].invalid && 
@@ -57,13 +57,15 @@
                             Department alredy exists
                         </div>
                         </div>
-                        </div>
+                        </div> -->
                    
                     
                     <div class="modal-footer">
-                        <button (click)="onAddDepartment()" [disabled]="!deptForm.valid" *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
-                        <button (click)="onUpdateDepartment()" [disabled]="!deptForm.valid" *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
-                        <!-- <button (click)="onCancel()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button> -->
+                        <button (click)="onAddDepartment()" [disabled]="!deptForm.valid" 
+                            *ngIf="addMode" class="btn btn-primary" type="button">Add</button>
+                        <button (click)="onUpdateDepartment()" [disabled]="!deptForm.valid" 
+                            *ngIf="!addMode" class="btn btn-primary" type="button">Update</button>  
+                        <button (click)="modalClose()" class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
                     </div>
                 </form>
             
@@ -77,21 +79,21 @@
     <table class="table table-hover" style="border-style:double;">
         <thead>
             <tr>
-                <th scope="col">DepartId</th>
+                <!-- <th scope="col">DepartId</th> -->
                 <th scope="col">DepartName</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let dept of departmentLists$ | async">
-                <th shope="row">{{dept.departmentId}}</th>
+                <!-- <th shope="row">{{dept.departmentId}}</th> -->
                 <td>{{dept.departmentName}}</td>
 
                
                     <td>
                     <button [disabled]="dept.departmentId <= 4" class="btn btn-primary me-2 mb-1" 
-                        (click)="getDepartment(dept.departmentId)" type="submit" 
+                        (click)="updateDepartment(dept.departmentId)" type="submit" 
                         data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -122,7 +124,7 @@
         </tbody>
     </table>
 
-    <div class="alert alert-success" role="alert" id="add-success-alert">
+    <!-- <div class="alert alert-success" role="alert" id="add-success-alert">
         Department add Successfully
     </div>
     <div class="alert alert-success" role="alert" id="update-success-alert">
@@ -130,5 +132,5 @@
     </div>
     <div class="alert alert-success" role="alert" id="delete-success-alert">
         Department Delete Successfully
-    </div>
+    </div> -->
 </div>  

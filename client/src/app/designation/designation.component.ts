@@ -13,21 +13,20 @@ import { NotificationService } from '../_services/notification.service';
 })
 export class DesignationComponent implements OnInit {
 
-  designation: Designation;
+  designation: Designation = new Designation;
   desigForm: FormGroup;
-  listData: any;
+
+  desigList: any[] = [];
 
   addMode = false;
   ModalTitle: string;
   designationsList$: Observable<Designation[]>;
 
   newDesignationName = "";
-  updateDesignationName = "";
   updateId: number;
 
   constructor(private desigService: DesignationService, private fb:FormBuilder,
     private notifyService : NotificationService) { 
-    this.listData = [];
     this.desigForm = this.fb.group({
       designationName : ['', Validators.compose([
         Validators.required,
@@ -52,21 +51,22 @@ export class DesignationComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDesignations();
+    this.updateDesigList();
+  }
+
+  updateDesigList(){
+    this.desigService.getDesignations().subscribe(res => {
+      for(let i in res){
+        this.desigList.push(res[i].designationName.toLowerCase());
+      }
+      console.log(this.desigList);
+    })
   }
 
   getDesignations(){
     this.designationsList$ = this.desigService.getDesignations();
   }
-
-  getDesignation(id: any){
-    this.addMode = false;
-    this.updateId = id;
-    this.updateDesignation();
-    console.log(id);
-    this.desigService.getDesignationById(id).subscribe(res => this.designation = res);
-    console.log(this.designation);
-  }
-
+  
   onAddClick(){
     this.addMode = true;
     this.ModalTitle = "Add Designation";
@@ -84,31 +84,31 @@ export class DesignationComponent implements OnInit {
       if(closebtn){
         closebtn.click();
       }
-      var showAddSuccess = document.getElementById('add-success-alert');
-       if(showAddSuccess) {
-         showAddSuccess.style.display = "block";
-       }
-       setTimeout(function() {
-         if(showAddSuccess) {
-           showAddSuccess.style.display = "none"
-         }
-       }, 4000);
+      this.getDesignations();
     });
-    this.designationsList$;
     this.addMode = false;
+    this.desigForm.reset();
     this.notifyService.showSuccess("Successfully Designation Added :)", "Success");
+    this.newDesignationName = "";
   }
 
-  updateDesignation(){
+  updateDesignation(id: any){
+    this.desigService.getDesignationById(id).subscribe(res => {
+      this.designation = res;
+      this.newDesignationName = res.designationName;
+      this.updateId = res.designationId;
+    })
+
     this.addMode =false;
-    this.ModalTitle = "Update Designation";  
+    this.ModalTitle = "Update Designation"; 
+    console.log(this.designation);
   }
 
   onUpdateDesignation(){
     
     let designation = {
       designationId: this.updateId,
-      designationName: this.updateDesignationName
+      designationName: this.newDesignationName
     }
 
     this.desigService.updateDesignation(designation.designationId, designation).subscribe(res => {
@@ -116,43 +116,20 @@ export class DesignationComponent implements OnInit {
       if(closeModalBtn) {
         closeModalBtn.click();
       }
-
-      var showUpdateSuccess = document.getElementById('update-success-alert');
-      if(showUpdateSuccess) {
-        showUpdateSuccess.style.display = "block";
-      }
-      setTimeout(function() {
-        if(showUpdateSuccess) {
-          showUpdateSuccess.style.display = "none"
-        }
-      }, 4000);
+      this.getDesignations();
     });
-    this.designationsList$ = this.desigService.getDesignations();
     this.notifyService.showSuccess("Successfully Designation Updated :)", "Success");
+    this.desigForm.reset();
   }
 
   onDelete(data: any){
     console.log(data);
     
     this.desigService.deleteDesignation(data).subscribe(res => {
-      var closeModalBtn = document.getElementById('add-edit-modal-close');
-      if(closeModalBtn) {
-        closeModalBtn.click();
-      }
-
-      var showDeleteSuccess = document.getElementById('delete-success-alert');
-      if(showDeleteSuccess) {
-        showDeleteSuccess.style.display = "block";
-      }
-      setTimeout(function() {
-        if(showDeleteSuccess) {
-          showDeleteSuccess.style.display = "none"
-        }
-      }, 4000);
+      this.getDesignations();
     });
-    this.designationsList$ = this.desigService.getDesignations();
     this.notifyService.showSuccess("Successfully Designation Delete :)", "Success");
   }
 
-  modalClose(){ }
+  modalClose(){ this.desigForm.reset();}
 }

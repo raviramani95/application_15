@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { Department } from '../_models/department.model';
+import { Designation } from '../_models/designation.model';
 import { Employee } from '../_models/employee.model';
+import { DepartmentService } from '../_services/department.service';
+import { DesignationService } from '../_services/designation.service';
 import { EmployeeService } from '../_services/employee.service';
 import { NotificationService } from '../_services/notification.service';
 
@@ -12,24 +16,33 @@ import { NotificationService } from '../_services/notification.service';
 })
 export class EmployeeComponent implements OnInit {
 
-  employee: Employee;
+  employee: Employee = new Employee;
   empForm: FormGroup;
-  listData: any;
 
   addMode = false;
   ModalTitle: string;
-  updateMode = false;
 
   employeeList$: Observable<any[]>;
-  empList: any[];
+  departmentList$: Observable<Department[]>;
+  designationList$: Observable<Designation[]>;
+
+  empList: Employee[] = [];
 
   updateId: number;
+  nFname = "";
+  nLname = "";
+  nGender: any;
+  nDepartment: any;
+  nDesignation: any;
 
 
-  constructor(private empService: EmployeeService, private fb:FormBuilder,
-    private notifyService : NotificationService) 
+  constructor(private empService: EmployeeService, 
+      public deptService: DepartmentService,
+      private fb:FormBuilder,
+      private notifyService : NotificationService,
+      public desigService: DesignationService
+      ) 
   { 
-    this.listData = [];
     this.empForm = this.fb.group({
       newFname : ['', Validators.compose([
         Validators.required,
@@ -39,148 +52,124 @@ export class EmployeeComponent implements OnInit {
         Validators.required,
         Validators.pattern('[a-zA-Z][a-zA-Z ]+')
       ])],
-      newGenderId : ['', Validators.required],
-      newDepartmentId : ['', Validators.required],
-      newDesignationId : ['', Validators.required]
+      newGender : ['', Validators.required],
+      newDepartment : ['', Validators.required],
+      newDesignation : ['', Validators.required]
     });
   }
 
-    nFname = "";
-    nLname = "";
-    nGenderId: number;
-    nDepartmentId: number;
-    nDesignationId: number;
-  
-    ngOnInit(): void {
-      this.getEmployees();
-    }
 
-    updateEmpList(){
-
-    }
   
-    getEmployees(){
-      // this.employeeList$ = this.empService.getEmployees();
-      this.empService.getEmployees().subscribe(res => {
-        const l = [];
-        this.empList = res;
-        for(let i in res){
-          // this.empList.push(res);
-          l.push(res[i]);
-        }
-        // this.empList.push(l);
-        this.empList = l;
-        console.log(this.empList);
-      })
-      console.log(this.employeeList$);
+  ngOnInit(): void {
+    this.getEmployees();
+    this.getDepartments();
+    this.getDesignations();
+  }
+
+
+  getEmployees() {
+    this.empService.getEmployees().subscribe(resData => {
+      for(let i in resData){
+            this.deptService.getDepartmentById(resData[i].department).subscribe(rr => {
+              resData[i].department = rr.departmentName;
+            });
+            this.desigService.getDesignationById(resData[i].designation).subscribe(rr=> {
+              resData[i].designation = rr.designationName;
+            })
+            if(resData[i].gender == 1){
+              resData[i].gender = "Male";
+            }else{
+              resData[i].gender = "Female";
+            }
+      }
+      this.empList = resData
       console.log(this.empList);
-    }
-    
-    getEmployee(id: any){
-      this.updateEmployee();
-      this.updateId = id;
-      console.log(id);
-      this.empService.getEmployeeById(id).subscribe(res => this.employee = res);
-      console.log(this.employee);
-    }
+    });
+  }
 
-    onAddClick(){
-      this.addMode = true;
-      this.ModalTitle = "Add Employee";
+  getDepartments(){
+    this.departmentList$ =  this.deptService.getDepartments();
+  }
+
+  getDesignations(){
+    this.designationList$ = this.desigService.getDesignations();
+  }
+
+  onAddClick() {
+    this.addMode = true;
+    this.ModalTitle = "Add Employee";
+  }
+
+  onAddEmployee() {
+    console.log(this.empForm.value);
+    let employee = {
+      employeeId: 0,
+      employeeFirstName: this.nFname,
+      employeeLastName: this.nLname,
+      genderId: this.empForm.value.newGender,
+      departmentId: this.empForm.value.newDepartment,
+      designationId: this.empForm.value.newDesignation
     }
+    console.log(employee);
 
-    onAddEmployee(){
-      this.addMode =true;
-
-      let employee = {
-        employeeId: 0,
-        employeeFirstName: this.nFname,
-        employeeLastName: this.nLname,
-        genderId: this.nGenderId,
-        departmentId: this.nDepartmentId,
-        designationId: this.nDesignationId
+    this.empService.addEmployee(employee).subscribe(res => {
+      var closebtn = document.getElementById('add-edit-modal-close');
+      if (closebtn) {
+        closebtn.click();
       }
-  
-      this.empService.addEmployee(employee).subscribe(res => {
-        var closebtn = document.getElementById('add-edit-modal-close');
-        if(closebtn){
-          closebtn.click();
-        }
-        var showAddSuccess = document.getElementById('add-success-alert');
-         if(showAddSuccess) {
-           showAddSuccess.style.display = "block";
-         }
-         setTimeout(function() {
-           if(showAddSuccess) {
-             showAddSuccess.style.display = "none"
-           }
-         }, 4000);
-      });
-      this.employeeList$;
-      this.addMode = false;
-      this.empForm.reset();
-      this.notifyService.showSuccess("Successfully Employee Added :)", "Success");
-    }
+      this.getEmployees();
+    });
+
+    this.addMode = false;
+    this.empForm.reset();
+    this.notifyService.showSuccess("Successfully Employee Added :)", "Success");
+  }
+
+  updateEmployee(id: any) {
+    this.empService.getEmployeeById(id).subscribe(res => {
+      this.employee = res;
+
+      this.nFname = res.employeeFirstName;
+      this.nLname = res.employeeLastName;
+      this.updateId = res.employeeId;
+      this.nGender = res.genderId;
+      this.nDepartment = res.departmentId;
+    })
     
-    updateEmployee(){
-      this.addMode =false;
-      this.updateMode = true;
-      this.ModalTitle = "Update Employee";  
-    }
+    this.addMode = false;
+    this.ModalTitle = "Update Employee";
 
-    onUpdateEmployee(){
-      let employee = {
-        employeeId: this.updateId,
-        employeeFirstName: this.nFname,
-        employeeLastName: this.nLname,
-        genderId: this.nGenderId,
-        departmentId: this.nDepartmentId,
-        designationId: this.nDesignationId
+  }
+
+  onUpdateEmployee() {
+    let employee = {
+      employeeId: this.updateId,
+      employeeFirstName: this.nFname,
+      employeeLastName: this.nLname,
+      genderId: this.empForm.value.newGender,
+      departmentId: this.empForm.value.newDepartment,
+      designationId: this.empForm.value.newDesignation
+    }
+    console.log(employee);
+    this.empService.updateEmployee(employee.employeeId, employee).subscribe(res => {
+      var closeModalBtn = document.getElementById('add-edit-modal-close');
+      if (closeModalBtn) {
+        closeModalBtn.click();
       }
-      this.empService.updateEmployee(employee.employeeId, employee).subscribe(res => {
-        var closeModalBtn = document.getElementById('add-edit-modal-close');
-        if(closeModalBtn) {
-          closeModalBtn.click();
-        }
-  
-        var showUpdateSuccess = document.getElementById('update-success-alert');
-        if(showUpdateSuccess) {
-          showUpdateSuccess.style.display = "block";
-        }
-        setTimeout(function() {
-          if(showUpdateSuccess) {
-            showUpdateSuccess.style.display = "none"
-          }
-        }, 4000);
-      });
-      this.employeeList$ = this.empService.getEmployees();
-      this.notifyService.showSuccess("Successfully Employee Updated :)", "Success");
-      this.empForm.reset();
-    }
-  
-    onDelete(data: any){
-      this.empService.deleteEmployee(data).subscribe(res => {
-        var closeModalBtn = document.getElementById('add-edit-modal-close');
-        if(closeModalBtn) {
-          closeModalBtn.click();
-        }
-  
-        var showDeleteSuccess = document.getElementById('delete-success-alert');
-        if(showDeleteSuccess) {
-          showDeleteSuccess.style.display = "block";
-        }
-        setTimeout(function() {
-          if(showDeleteSuccess) {
-            showDeleteSuccess.style.display = "none"
-          }
-        }, 4000);
-  
-        this.employeeList$ = this.empService.getEmployees();
-      });
-      this.notifyService.showSuccess("Successfully Employee Delated :)", "Success");
-      this.empForm.reset();
-    }
+      this.getEmployees();
+    });
+    this.notifyService.showSuccess("Successfully Employee Updated :)", "Success");
+    this.empForm.reset();
+  }
 
-    modalClose(){ this.empForm.reset(); }
+  onDelete(data: any) {
+    this.empService.deleteEmployee(data).subscribe(res => {
+      this.getEmployees();
+    });
+    this.notifyService.showSuccess("Successfully Employee Delated :)", "Success");
+    this.empForm.reset();
+  }
+
+  modalClose() { this.empForm.reset(); }
 
 }

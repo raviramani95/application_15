@@ -11,6 +11,8 @@ namespace application.Models
             Employees = new HashSet<Employee>();
         }
         public int GenderId { get; set; }
+
+        [Required]
         public string GenderName { get; set; }
 
         public ICollection<Employee> Employees { get; set; }

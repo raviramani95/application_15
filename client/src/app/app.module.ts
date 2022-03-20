@@ -13,7 +13,6 @@ import { EmployeeComponent } from './employee/employee.component';
 import { GenderComponent } from './gender/gender.component';
 import { HeaderComponent } from './header/header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AddEditDepartmentComponent } from './department/add-edit-department/add-edit-department.component';
 import { MatSliderModule } from '@angular/material/slider';
 
 import { MatTableModule } from '@angular/material/table';
@@ -21,8 +20,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
-import { MatRadioModule } from '@angular/material/radio';
-import { ShowDeleteDepartmentComponent } from './department/show-delete-department/show-delete-department.component';
 import { DialogBoxComponent } from './dialog-box/dialog-box.component';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -34,8 +31,6 @@ import { ToastrModule } from 'ngx-toastr';
     EmployeeComponent,
     GenderComponent,
     HeaderComponent,
-    AddEditDepartmentComponent,
-    ShowDeleteDepartmentComponent,
     DialogBoxComponent
   ],
   imports: [

@@ -11,7 +11,13 @@ namespace application.Models
     {
         [Key]
         public int EmployeeId { get; set; }
+
+        [StringLength(60, MinimumLength = 3)]
+        [Required]
         public string EmployeeFirstName { get; set; }
+
+        [StringLength(60, MinimumLength = 3)]
+        [Required]
         public string EmployeeLastName { get; set; }
 
         [ForeignKey("GenderId")]
